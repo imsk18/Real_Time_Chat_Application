@@ -1,0 +1,25 @@
+import userModel from "../models/user.model.js";
+import jwt from "jsonwebtoken";
+
+const authUser = async (req,res,next)=>{
+
+    try{
+    const token  = req.cookies.token;
+
+    console.log(token);
+    if(!token){
+        return res.status(401).json({message:"please login first"})
+    }
+
+    const decoded = jwt.verify(token,process.env.JWT_SECRET);
+
+    req.user = decoded;
+    next()
+
+    }catch(error){
+        res.status(401).json({message:"invalid or expire token"})
+    }
+   
+}
+
+export default authUser
